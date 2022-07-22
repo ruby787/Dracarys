@@ -1,0 +1,47 @@
+import java.awt.Color;
+import java.awt.Graphics;
+
+class Brick{
+	    int length;
+	    int width;
+	    Color color;
+	    int points;
+	    boolean broken;
+	    Pair start;
+	    int startx;
+	    int starty;
+	    boolean bonus;
+	    Powerup pu;
+	    
+
+	    public Brick(int l, int w, Color c, int p,int x,int y , boolean broken, boolean b){
+			length=l;
+			width=w;
+			color=c;
+			points=p;
+			broken= this.broken;
+			bonus=b;
+			startx = x;
+			starty = y;
+			pu = null;
+			
+		}
+	    public void draw(Graphics g){
+		 	g.setColor(this.color);
+		 	g.fillRect(startx,starty,width,length);
+		 }
+		 public void brickBroke(){ 
+		     
+		 	this.broken=true;
+		 	World.score+=this.points;
+			
+		 	
+		 }
+	   public void update (World w, double t){
+	       if (bonus == true && broken == true)
+		   pu.go = true;
+	   }
+		    
+	
+		   
+	}

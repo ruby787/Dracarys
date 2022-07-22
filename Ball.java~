@@ -1,0 +1,131 @@
+import java.util.Random;
+import java.awt.Graphics;
+import java.awt.Color;
+class Ball{
+    double radius;
+    Color color;
+    Pair velocity;
+    Pair position;
+
+    
+    public Ball(){
+	Random rand = new Random(); 
+	position = new Pair(500.0,500.0);
+	velocity = new Pair(-300.0, -250.0);
+	color=Color.red;
+	radius=10.0;
+    }	
+    public void draw(Graphics g){
+	g.setColor(color);
+	g.fillOval((int)(position.x), (int)(position.y), (int)(2*radius), (int)(2*radius));
+    }
+    public void update(World w, double time){
+	position = position.add(velocity.times(time));
+	bounce(w);
+    }
+    public void setVelocity(Pair v){
+	velocity = v;
+    }
+    private void bounce(World w){
+	
+	double a1 = 0;
+	double a2 = 0;
+	double a3 = 0;
+	double a4 = 0;
+	double b1 = 0;
+	double b2 = 0;
+	double b3 = 0;
+	double b4 = 0;
+	for(int i = 0; i<w.bs.length; i++){
+	    b1 = w.bs[i].startx;
+	    b2 = w.bs[i].starty;
+	    b3 = b1 + w.bs[i].width;
+	    b4 = b2 + w.bs[i].length;
+	    
+	    if( position.y + radius <= b2 + 5.0 && position.y + radius >= b2 - 1.0 && position.x >= b1 && position.x <=b3 && w.bs[i].broken == false && velocity.y >0){
+		velocity.flipY();
+		w.bs[i].brickBroke();
+		w.count++;
+		w.play();
+		
+	    }
+	    if (position.y <= b4 + 1.0 && position.y >= b4 - 5.0  && position.x >= b1 && position.x <=b3 && w.bs[i].broken == false && velocity.y < 0){
+		velocity.flipY();
+		w.bs[i].brickBroke();
+		w.count++;
+		w.play();
+	    }
+	    
+	    if (position.x <= b3  && position.x  >= b3 - 5.0 && position.y >= b2 && position.y <= b4 && w.bs[i].broken == false && velocity.x < 0){
+		velocity.flipX();
+		w.bs[i].brickBroke();
+		w.count++;
+		w.play();
+	    }
+	    if (position.x + radius >= b1  && position.x + radius <= b1 + 5.0 && position.y >= b2 && position.y <= b4 && w.bs[i].broken == false && velocity.x > 0){
+		velocity.flipX();
+		w.bs[i].brickBroke();
+		w.count++;
+		w.play();
+	    } 
+	}     
+		    
+			      
+			
+	a1 = w.saucer.position.x;
+	a2 = w.saucer.position.y;
+	a3 = a1 + w.saucer.width;
+	a4 = a2 + w.saucer.length;
+	
+	if( position.y + radius <= a2 + 5.0 && position.y + radius >= a2 - 1.0 && position.x >= a1 && position.x <=a3 && velocity.y >0){
+	    velocity.flipY();
+	    
+	  
+	    
+	}
+			   /*if (position.y <= a4 + 1.0 && position.y >= a4 - 5.0  && position.x >= a1 && position.x <=a3 &&  velocity.y < 0){
+			    	velocity.flipY();
+			    	
+			    	
+				}*/
+			    
+	if (position.x <= a3  && position.x  >= a3 - 5.0 && position.y >= a2 && position.y <= a4 && velocity.x < 0){
+	    velocity.flipX();
+	    
+	}
+	if (position.x + radius >= a1  && position.x + radius <= a1 + 5.0 && position.y >= a2 && position.y <= a4 && velocity.x > 0){
+	    velocity.flipX();
+	    
+	    
+	} 
+	
+	if (position.x-radius < 0){
+	    velocity.flipX();
+	    position.x = radius;
+	}
+	else if (position.x + radius > w.width){
+	    velocity.flipX();
+	    position.x = w.width - radius;
+	    
+	}
+	if (position.y - radius < 0){
+	    velocity.flipY();
+	    position.y = radius;
+	    
+	}
+	int a = 0;
+	if(position.y + radius >  w.height){
+	    if (w.lives > 0){    
+		velocity.flipY();
+		position.y = w.height - radius;
+		if (!w.bounce)
+		    w.lives--;
+	    }
+	}
+	if (w.lives == 0 && position.y + radius > w.height)
+	    w.gamelost = true;
+    }          
+    
+
+    
+}

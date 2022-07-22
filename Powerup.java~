@@ -1,0 +1,54 @@
+import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.image.*;
+class Powerup{
+    int width;
+    int length;
+    BufferedImage img;
+    String use;
+    Pair velocity;
+    Pair position;
+    boolean go;
+    boolean used;
+    
+
+    public Powerup(int x, int y, BufferedImage i, String u, boolean g) {
+	width = 20;
+	length = 20;
+	img = i;
+	use = u;
+	position = new Pair (x,y);
+	velocity = new Pair (0.0, 100.0);
+	go = g;
+	used = false;
+	
+    }
+    public void draw(Graphics g){
+	g.drawImage(img,(int)position.x,(int)position.y,null);
+
+    }
+    public void update(World w, double time){
+	position = position.add(velocity.times(time));
+	absorb(w);
+    }
+    public void absorb (World w){
+	double a1 = 0;
+	double a2 = 0;
+	double a3 = 0;
+	double a4 = 0;
+	a1 = w.saucer.position.x;
+	a2 = w.saucer.position.y;
+	a3 = a1 + w.saucer.width;
+	a4 = a2 + w.saucer.length;
+			
+	if(position.y + length >= a2 - 1.0 && position.y <= a4 + 1.0 && position.x <= a3 + 1.0 && position.x + width >= a1) {
+	    go = false;
+	    used = true;
+	    w.Powerups(use);
+	    w.play3();
+	    position = new Pair (5000.0,5000.0);  
+	}
+    }
+    
+
+}
